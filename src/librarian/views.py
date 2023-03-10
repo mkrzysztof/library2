@@ -1,22 +1,27 @@
 from django.shortcuts import render
 from django.views import View
+from django.views.generic.base import TemplateView
 
 # Create your views here.
 
-class Librarian(View):
-    pass
+class LibrarianView(TemplateView):
+    template_name = 'librarian/index.html'
+        
 
 
-class Search(View):
-    pass
+class SearchView(View):
+    def get(self, request):
+        return render(request, 'librarian/search.html')
 
 
-class BookReturn(View):
-    pass
+class BookReturnView(View):
+    def get(self, request):
+        return render(request, 'librarian/return_book.html')
 
 
-class UserProfile(View):
-    pass
+class ReaderProfileView(View):
+    def get(self, request):
+        return render(request, 'librarian/reader.html')
 
 
 class LendBook(View):
