@@ -4,9 +4,16 @@
 <title>Czytelnik</title>
 </head>
 <body>
-  <h1>Czytelnik</h1>
-  <a href="{% url 'borrow-book' %}">Wypożycz książkę</a>
-  <a href="{% url 'return-book' %}">Zwróć książkę</a>
-  <a href="{% url 'index' %}">Powrót</a>
+  <h1>Czytelnik {{ reader_id }}</h1>
+  <p>
+    {{ reader_name }}
+  <p>
+    {{ reader_surname }}
+  <p>
+    {% if reader_id != -1 %}
+    <a href="{% url 'borrow-book' %}">Wypożycz książkę</a>
+    <a href="{% url 'return-book' %}">Zwróć książkę</a>
+    <a href="{% url 'index' %}">Powrót</a>
+    {% endif %}
 </body>
 </html>
