@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+<title>Wypożyczona książka</title>
+</head>
+<body>
+<h1>Wypożyczona książka</h1>
+{% if request.session.book_in_catalog %}
+   {% if request.session.book_in_library %}
+      Wypożyczono Książkę
+   {% else %}
+      Nie można wypożyczyć książki, ktoś ją wypożyczył
+   {% endif %}
+
+{% else %}
+<p>
+  Brak książki w katalogu bibliotecznym
+{% endif %}
+</body>
+</html>

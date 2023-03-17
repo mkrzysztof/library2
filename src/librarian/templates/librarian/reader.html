@@ -4,16 +4,16 @@
 <title>Czytelnik</title>
 </head>
 <body>
-  <h1>Czytelnik {{ reader_id }}</h1>
+  <h1>Czytelnik {{ request.session.reader_id }}</h1>
   <p>
-    {{ reader_name }}
+    {{ request.session.reader_name }}
   <p>
-    {{ reader_surname }}
+    {{ request.session.reader_surname }}
   <p>
     {% if reader_id != -1 %}
     <a href="{% url 'borrow-book' %}">Wypożycz książkę</a>
     <a href="{% url 'return-book' %}">Zwróć książkę</a>
-    <a href="{% url 'index' %}">Powrót</a>
     {% endif %}
+    <a href="{% url 'index' %}">Powrót</a>
 </body>
 </html>
