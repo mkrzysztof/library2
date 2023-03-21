@@ -21,11 +21,9 @@ class SearchView(View):
         return render(request, 'librarian/search.html')
 
 
-class ReaderProfileView(View):
+class ReaderProfileView(TemplateView):
     READER_NOT_FOUND = -1
-    def get(self, request):
-        logging.info(request.session['reader_id'])
-        return render(request, 'librarian/reader.html')
+    template_name = 'librarian/reader.html'
 
     def post(self, request):
         form = IdReaderForm(request.POST)
@@ -57,12 +55,9 @@ def in_borrow(book):
     return bool(borrow)
 
 
-class BorrowBookView(View):
-    def get(self, request):
-        ctx = {
-            'id_book_form': IdBookForm()
-        }
-        return render(request, 'librarian/borrow-book.html', context=ctx)
+class BorrowBookView(FormView):
+    template_name = 'librarian/borrow-book.html'
+    form_class = IdBookForm
 
     def post(self, request):
         form = IdBookForm(request.POST)
@@ -89,12 +84,9 @@ class BookIsBorrowView(TemplateView):
     template_name = 'librarian/book-is-borrow.html'
     
 
-class ReturnBookView(View):
-    def get(self, request):
-        ctx = {
-            'id_book_form': IdBookForm()
-        }
-        return render(request, 'librarian/return_book.html', context=ctx)
+class ReturnBookView(FormView):
+    template_name = 'librarian/return_book.html'
+    form_class = IdBookForm
 
     def post(self, request):
         form = IdBookForm(request.POST)
