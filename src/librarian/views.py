@@ -23,11 +23,6 @@ class SearchView(View):
         return render(request, 'librarian/search.html')
 
 
-class BookReturnView(View):
-    def get(self, request):
-        return render(request, 'librarian/return_book.html')
-
-
 class ReaderProfileView(View):
     READER_NOT_FOUND = -1
     def get(self, request):
@@ -59,6 +54,11 @@ class ReaderProfileView(View):
         return redirect(reverse('reader-profile'))
 
 
+def in_borrow(book):
+    borrow = Borrowing.objects.filter(book=book)
+    return bool(borrow)
+
+
 class BorrowBookView(View):
     def get(self, request):
         ctx = {
@@ -81,7 +81,7 @@ class BorrowBookView(View):
             except Book.DoesNotExist:
                 request.session['book_in_catalog'] = False
             else:
-                if not self.in_borrow(book):
+                if not in_borrow(book):
                     request.session['book_in_library'] = True
                     reader = Reader.objects.get(
                         pk=request.session['reader_id']
@@ -91,10 +91,43 @@ class BorrowBookView(View):
         return redirect(reverse('book-is-borrow'))
 
 
-class BookIsBorrow(View):
+class BookIsBorrowView(View):
     def get(self, request):
         return render(request, 'librarian/book-is-borrow.html')
-    
+
+
+class ReturnBookView(View):
+    def get(self, request):
+        ctx = {
+            'id_book_form': IdBookForm()
+        }
+        logging.info('aaaa')
+        print(ctx)
+        return render(request, 'librarian/return_book.html', context=ctx)
+
+    def post(self, request):
+        form = IdBookForm(request.POST)
+        request.session['book_in_catalog'] = True
+        request.session['book_is_borrow'] = False
+        if form.is_valid():
+            book_id = form.cleaned_data['id']
+            try:
+                book = Book.objects.get(pk=book_id)
+                logging.info('post5')
+            except Book.DoesNotExist:
+                request.session['book_in_catalog'] = False
+            else:
+                if in_borrow(book):
+                    request.session['book_is_borrow'] = True
+                    borrow = Borrowing.objects.get(book=book)
+                    borrow.delete()
+        return redirect(reverse('book-is-return'))
+
+
+class BookIsReturnView(View):
+    def get(self, request):
+        return render(request, 'librarian/book-is-return.html')
+        
 
 class LoanExtension(View):
     pass

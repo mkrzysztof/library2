@@ -4,6 +4,11 @@
 <title>Zwrot książki</title>
 </head>
 <body>
-<h1>Zwrot książki</h1>
+  <h1>Zwrot książki</h1>
+  <form method="POST" action="{% url 'return-book' %}">
+    {% csrf_token %}
+    <p>{{ id_book_form }}</p>
+    <input type="submit", value="Zwróć książkę">
+  </form>
 </body>
 </html>

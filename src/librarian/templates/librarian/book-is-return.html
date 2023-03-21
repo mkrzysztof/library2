@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+<title>Oddana książka</title>
+</head>
+<body>
+<h1>Oddana książka</h1>
+{% if request.session.book_in_catalog %}
+  {% if request.session.book_is_borrow %}
+    <p>Oddano książkę</p>
+  {% else %}
+    <p>Nie wypożyczono tej książki</p>
+  {% endif %}
+{% else %}
+<p>Brak książki w katalogu bibliotecznym</p>
+{% endif %}
+<a href="{% url 'index' %}">Powrót do głównego menu</a>
+</body>
+</html>
