@@ -8,7 +8,7 @@
     <br>
     <form method="POST" action="{% url 'reader-profile' %}">
       {% csrf_token %}
-      <p>{{ id_reader_form }}</p>
+      <p>{{ form.as_p }}</p>
       <input type="submit", value="Przejdź do czytelnika">
     </form>
     <a href="{% url 'reader-profile' %}">przejdź do czytelnika</a>

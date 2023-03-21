@@ -11,12 +11,10 @@ from .models import (Reader, Book, Borrowing)
 
 # Create your views here.
 
-class LibrarianView(View):
-    def get(self, request):
-        ctx = {
-            'id_reader_form': IdReaderForm()
-        }
-        return render(request, 'librarian/index.html', context=ctx)
+class LibrarianView(FormView):
+    template_name = 'librarian/index.html'
+    form_class = IdReaderForm
+    
 
 class SearchView(View):
     def get(self, request):
@@ -96,8 +94,6 @@ class ReturnBookView(View):
         ctx = {
             'id_book_form': IdBookForm()
         }
-        logging.info('aaaa')
-        print(ctx)
         return render(request, 'librarian/return_book.html', context=ctx)
 
     def post(self, request):
