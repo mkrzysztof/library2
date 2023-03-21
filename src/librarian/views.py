@@ -66,10 +66,6 @@ class BorrowBookView(View):
         }
         return render(request, 'librarian/borrow-book.html', context=ctx)
 
-    def in_borrow(self, book):
-        borrow = Borrowing.objects.filter(book=book)
-        return bool(borrow)
-    
     def post(self, request):
         form = IdBookForm(request.POST)
         request.session['book_in_catalog'] = True
@@ -91,10 +87,9 @@ class BorrowBookView(View):
         return redirect(reverse('book-is-borrow'))
 
 
-class BookIsBorrowView(View):
-    def get(self, request):
-        return render(request, 'librarian/book-is-borrow.html')
-
+class BookIsBorrowView(TemplateView):
+    template_name = 'librarian/book-is-borrow.html'
+    
 
 class ReturnBookView(View):
     def get(self, request):
@@ -113,7 +108,6 @@ class ReturnBookView(View):
             book_id = form.cleaned_data['id']
             try:
                 book = Book.objects.get(pk=book_id)
-                logging.info('post5')
             except Book.DoesNotExist:
                 request.session['book_in_catalog'] = False
             else:
@@ -124,9 +118,8 @@ class ReturnBookView(View):
         return redirect(reverse('book-is-return'))
 
 
-class BookIsReturnView(View):
-    def get(self, request):
-        return render(request, 'librarian/book-is-return.html')
+class BookIsReturnView(TemplateView):
+    template_name = 'librarian/book-is-return.html'
         
 
 class LoanExtension(View):
