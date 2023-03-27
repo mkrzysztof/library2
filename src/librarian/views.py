@@ -25,6 +25,24 @@ class ReaderProfileView(TemplateView):
     READER_NOT_FOUND = -1
     template_name = 'librarian/reader.html'
 
+    def reader_not_found(self, request):
+        request.session.update(
+            {
+                'reader_id': self.READER_NOT_FOUND,
+                'reader_name': 'brak',
+                'reader_surname': 'brak'
+            }
+        )
+
+    def reader_found(self, request, reader):
+        request.session.update(
+            {
+                'reader_id': reader.id,
+                'reader_name': reader.name,
+                'reader_surname': reader.surname
+            }
+        )
+    
     def post(self, request):
         form = IdReaderForm(request.POST)
         if form.is_valid():
@@ -32,21 +50,11 @@ class ReaderProfileView(TemplateView):
             try:
                 reader = Reader.objects.get(id=reader_id)
             except Reader.DoesNotExist:
-                request.session.update(
-                    {
-                        'reader_id': self.READER_NOT_FOUND,
-                        'reader_name': 'brak',
-                        'reader_surname': 'brak'
-                    }
-                )
+                self.reader_not_found(request)
             else:
-                request.session.update(
-                    {
-                        'reader_id': reader.id,
-                        'reader_name': reader.name,
-                        'reader_surname': reader.surname
-                    }
-                )
+                self.reader_found(request, reader)
+        else:
+            pass
         return redirect(reverse('reader-profile'))
 
 
@@ -72,6 +80,7 @@ class BorrowBookView(FormView):
             else:
                 if not in_borrow(book):
                     request.session['book_in_library'] = True
+                    print(request.session)
                     reader = Reader.objects.get(
                         pk=request.session['reader_id']
                     )
